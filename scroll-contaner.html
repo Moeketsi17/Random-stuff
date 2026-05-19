@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>custom scroll section</title>
+</head>
+<body>
+
+    <style>
+
+  .solutions-interaction {
+    position: relative;
+    background: #EEEBE7;
+    font-family: "outfit";
+  }
+
+  .solutions-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .slide-panel {
+    position: absolute;
+    inset: 0;
+    will-change: transform, filter, opacity;
+    transform-origin: center top;
+  }
+  .slide-panel:nth-child(1) { z-index: 1; }
+  .slide-panel:nth-child(2) { z-index: 2; }
+  .slide-panel:nth-child(3) { z-index: 3; }
+  .slide-panel:nth-child(4) { z-index: 4; }
+
+  .panel-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .slide-panel:nth-child(1) .panel-bg { background-image: url('https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/CEF-Chesham-Edit-Photos-02443-1920x1080-1.webp'); }
+  .slide-panel:nth-child(2) .panel-bg { background-image: url('https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/SDE-Building2-scaled-1.webp'); }
+  .slide-panel:nth-child(3) .panel-bg { background-image: url('https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/CEF-Chesham-Edit-Photos-02205-1920x1080-1.webp'); }
+  .slide-panel:nth-child(4) .panel-bg { background-image: url('https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/EVcharging.webp'); }
+
+  .panel-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg,
+      rgba(0,0,0,0.52) 0%,
+      rgba(0,0,0,0.22) 45%,
+      rgba(0,0,0,0.64) 100%
+    );
+  }
+
+  .solutions-card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    pointer-events: none;
+  }
+
+  .card-solution {
+    width: 100%;
+    max-width: 600px;
+    pointer-events: auto;
+  }
+
+  .card-solution-inside {
+    position: relative;
+    padding: 40px 40px 44px;
+    background: #EEEBE7;
+    color: #081f2d;
+    min-height: 640px;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.4s ease, backdrop-filter 0.5s ease;
+  }
+
+  .card-border {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .card-border::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    height: 1px; width: 0;
+    background: #081f2d;
+    transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-border::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    height: 1px; width: 0;
+    background: #081f2d;
+    transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-border .cb-left {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1px; height: 0;
+    background: #081f2d;
+    transition: height 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+  }
+  .card-border .cb-right {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 1px; height: 0;
+    background: #081f2d;
+    transition: height 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+  }
+  .card-solution-inside:hover .card-border::before,
+  .card-solution-inside:hover .card-border::after { width: 100%; }
+  .card-solution-inside:hover .card-border .cb-left,
+  .card-solution-inside:hover .card-border .cb-right { height: 100%; }
+
+  .header-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0px;
+    border-bottom: 0.5px solid #081f2d;
+    padding-bottom: 5px;
+  }
+  .base-txt-badge {
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    color: #081f2d;
+  }
+  .numbers-solutions {
+    display: flex;
+    gap: 3px;
+    color: #007f82;
+    font-size: 20px;
+  }
+
+  .card-content-slot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-slide-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    pointer-events: none;
+    clip-path: inset(0 0 100% 0);
+  }
+
+  /* ── Title box (now an <a>) ── */
+  .solution-title-box {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 3rem 0 0 0;
+  }
+
+  .solutions-title-card {
+    font-size: 50px;
+    font-weight: 500;
+    color: #081f2d;
+    line-height: 1.2;
+    display: block;
+    padding-top:2rem;
+  }
+
+  .chips-cases {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 2rem;
+  }
+  .chips-solutions {
+    font-size: 16px;
+    font-weight: 400;
+    color: #081f2d;
+    border: 0.5px solid #081f2d;
+    background: transparent;
+    padding: .5em 1em;
+    text-decoration: none;
+    transition: 0.3s ease;
+  }
+  .chips-solutions:hover {
+    background: #007f82;
+    color: #fff;
+    border-color: #007f82;
+  }
+
+  .scroll-dots {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .scroll-dot {
+    width: 6px; height: 6px;
+    background: rgba(255,255,255,0.3);
+    border: 0.5px solid rgba(255,255,255,0.4);
+    transition: background 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+  .scroll-dot.is-active {
+    background: rgba(255,255,255,0.9);
+    transform: scale(1.5);
+  }
+
+  @media (max-width: 600px) {
+    .card-solution-inside { padding: 24px 22px 28px; min-height: 500px; }
+    .scroll-dots { right: 10px; }
+  }
+
+  /* ── Snake icon shared base ── */
+  .st-wrap, .ins-wrap, .int2-wrap, .mec2-wrap {
+    display: inline-block;
+    line-height: 0;
+    cursor: pointer;
+  }
+  .st-wrap svg circle,
+  .ins-wrap svg circle,
+  .int2-wrap svg circle,
+  .mec2-wrap svg circle {
+    fill: #0b1f2c;
+    opacity: 1;
+  }
+</style>
+
+<!-- ── Storage snake styles ── -->
+<style>
+#st-svg:hover circle{opacity:0.15;}
+#st-svg:hover .sq{animation-duration:4s;animation-timing-function:step-start;animation-iteration-count:infinite;}
+@keyframes st-sn0{0%{opacity:0.15}0.01%{opacity:1}6.98%{opacity:1}6.99%{opacity:0.15}93.02%{opacity:0.15}93.03%{opacity:1}100.0%{opacity:1}100%{opacity:0.15}}@keyframes st-sn1{0%{opacity:0.15}1.16%{opacity:0.15}1.17%{opacity:1}8.14%{opacity:1}8.15%{opacity:0.15}91.86%{opacity:0.15}91.87%{opacity:1}98.84%{opacity:1}98.85%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn2{0%{opacity:0.15}2.33%{opacity:0.15}2.34%{opacity:1}9.3%{opacity:1}9.31%{opacity:0.15}90.7%{opacity:0.15}90.71%{opacity:1}97.67%{opacity:1}97.68%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn3{0%{opacity:0.15}3.49%{opacity:0.15}3.50%{opacity:1}10.47%{opacity:1}10.48%{opacity:0.15}89.53%{opacity:0.15}89.54%{opacity:1}96.51%{opacity:1}96.52%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn4{0%{opacity:0.15}4.65%{opacity:0.15}4.66%{opacity:1}11.63%{opacity:1}11.64%{opacity:0.15}88.37%{opacity:0.15}88.38%{opacity:1}95.35%{opacity:1}95.36%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn5{0%{opacity:0.15}5.81%{opacity:0.15}5.82%{opacity:1}12.79%{opacity:1}12.80%{opacity:0.15}87.21%{opacity:0.15}87.22%{opacity:1}94.19%{opacity:1}94.20%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn6{0%{opacity:0.15}6.98%{opacity:0.15}6.99%{opacity:1}13.95%{opacity:1}13.96%{opacity:0.15}86.05%{opacity:0.15}86.06%{opacity:1}93.02%{opacity:1}93.03%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn7{0%{opacity:0.15}8.14%{opacity:0.15}8.15%{opacity:1}15.12%{opacity:1}15.13%{opacity:0.15}84.88%{opacity:0.15}84.89%{opacity:1}91.86%{opacity:1}91.87%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn8{0%{opacity:0.15}9.3%{opacity:0.15}9.31%{opacity:1}16.28%{opacity:1}16.29%{opacity:0.15}83.72%{opacity:0.15}83.73%{opacity:1}90.7%{opacity:1}90.71%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn9{0%{opacity:0.15}10.47%{opacity:0.15}10.48%{opacity:1}17.44%{opacity:1}17.45%{opacity:0.15}82.56%{opacity:0.15}82.57%{opacity:1}89.53%{opacity:1}89.54%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn10{0%{opacity:0.15}11.63%{opacity:0.15}11.64%{opacity:1}18.6%{opacity:1}18.61%{opacity:0.15}81.4%{opacity:0.15}81.41%{opacity:1}88.37%{opacity:1}88.38%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn11{0%{opacity:0.15}12.79%{opacity:0.15}12.80%{opacity:1}19.77%{opacity:1}19.78%{opacity:0.15}80.23%{opacity:0.15}80.24%{opacity:1}87.21%{opacity:1}87.22%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn12{0%{opacity:0.15}13.95%{opacity:0.15}13.96%{opacity:1}20.93%{opacity:1}20.94%{opacity:0.15}79.07%{opacity:0.15}79.08%{opacity:1}86.05%{opacity:1}86.06%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn13{0%{opacity:0.15}15.12%{opacity:0.15}15.13%{opacity:1}22.09%{opacity:1}22.10%{opacity:0.15}77.91%{opacity:0.15}77.92%{opacity:1}84.88%{opacity:1}84.89%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn14{0%{opacity:0.15}16.28%{opacity:0.15}16.29%{opacity:1}23.26%{opacity:1}23.27%{opacity:0.15}76.74%{opacity:0.15}76.75%{opacity:1}83.72%{opacity:1}83.73%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn15{0%{opacity:0.15}17.44%{opacity:0.15}17.45%{opacity:1}24.42%{opacity:1}24.43%{opacity:0.15}75.58%{opacity:0.15}75.59%{opacity:1}82.56%{opacity:1}82.57%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn16{0%{opacity:0.15}18.6%{opacity:0.15}18.61%{opacity:1}25.58%{opacity:1}25.59%{opacity:0.15}74.42%{opacity:0.15}74.43%{opacity:1}81.4%{opacity:1}81.41%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn17{0%{opacity:0.15}19.77%{opacity:0.15}19.78%{opacity:1}26.74%{opacity:1}26.75%{opacity:0.15}73.26%{opacity:0.15}73.27%{opacity:1}80.23%{opacity:1}80.24%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn18{0%{opacity:0.15}20.93%{opacity:0.15}20.94%{opacity:1}27.91%{opacity:1}27.92%{opacity:0.15}72.09%{opacity:0.15}72.10%{opacity:1}79.07%{opacity:1}79.08%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn19{0%{opacity:0.15}22.09%{opacity:0.15}22.10%{opacity:1}29.07%{opacity:1}29.08%{opacity:0.15}70.93%{opacity:0.15}70.94%{opacity:1}77.91%{opacity:1}77.92%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn20{0%{opacity:0.15}23.26%{opacity:0.15}23.27%{opacity:1}30.23%{opacity:1}30.24%{opacity:0.15}69.77%{opacity:0.15}69.78%{opacity:1}76.74%{opacity:1}76.75%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn21{0%{opacity:0.15}24.42%{opacity:0.15}24.43%{opacity:1}31.4%{opacity:1}31.41%{opacity:0.15}68.6%{opacity:0.15}68.61%{opacity:1}75.58%{opacity:1}75.59%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn22{0%{opacity:0.15}25.58%{opacity:0.15}25.59%{opacity:1}32.56%{opacity:1}32.57%{opacity:0.15}67.44%{opacity:0.15}67.45%{opacity:1}74.42%{opacity:1}74.43%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn23{0%{opacity:0.15}26.74%{opacity:0.15}26.75%{opacity:1}33.72%{opacity:1}33.73%{opacity:0.15}66.28%{opacity:0.15}66.29%{opacity:1}73.26%{opacity:1}73.27%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn24{0%{opacity:0.15}27.91%{opacity:0.15}27.92%{opacity:1}34.88%{opacity:1}34.89%{opacity:0.15}65.12%{opacity:0.15}65.13%{opacity:1}72.09%{opacity:1}72.10%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn25{0%{opacity:0.15}29.07%{opacity:0.15}29.08%{opacity:1}36.05%{opacity:1}36.06%{opacity:0.15}63.95%{opacity:0.15}63.96%{opacity:1}70.93%{opacity:1}70.94%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn26{0%{opacity:0.15}30.23%{opacity:0.15}30.24%{opacity:1}37.21%{opacity:1}37.22%{opacity:0.15}62.79%{opacity:0.15}62.80%{opacity:1}69.77%{opacity:1}69.78%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn27{0%{opacity:0.15}31.4%{opacity:0.15}31.41%{opacity:1}38.37%{opacity:1}38.38%{opacity:0.15}61.63%{opacity:0.15}61.64%{opacity:1}68.6%{opacity:1}68.61%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn28{0%{opacity:0.15}32.56%{opacity:0.15}32.57%{opacity:1}39.53%{opacity:1}39.54%{opacity:0.15}60.47%{opacity:0.15}60.48%{opacity:1}67.44%{opacity:1}67.45%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn29{0%{opacity:0.15}33.72%{opacity:0.15}33.73%{opacity:1}40.7%{opacity:1}40.71%{opacity:0.15}59.3%{opacity:0.15}59.31%{opacity:1}66.28%{opacity:1}66.29%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn30{0%{opacity:0.15}34.88%{opacity:0.15}34.89%{opacity:1}41.86%{opacity:1}41.87%{opacity:0.15}58.14%{opacity:0.15}58.15%{opacity:1}65.12%{opacity:1}65.13%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn31{0%{opacity:0.15}36.05%{opacity:0.15}36.06%{opacity:1}43.02%{opacity:1}43.03%{opacity:0.15}56.98%{opacity:0.15}56.99%{opacity:1}63.95%{opacity:1}63.96%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn32{0%{opacity:0.15}37.21%{opacity:0.15}37.22%{opacity:1}44.19%{opacity:1}44.20%{opacity:0.15}55.81%{opacity:0.15}55.82%{opacity:1}62.79%{opacity:1}62.80%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn33{0%{opacity:0.15}38.37%{opacity:0.15}38.38%{opacity:1}45.35%{opacity:1}45.36%{opacity:0.15}54.65%{opacity:0.15}54.66%{opacity:1}61.63%{opacity:1}61.64%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn34{0%{opacity:0.15}39.53%{opacity:0.15}39.54%{opacity:1}46.51%{opacity:1}46.52%{opacity:0.15}53.49%{opacity:0.15}53.50%{opacity:1}60.47%{opacity:1}60.48%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn35{0%{opacity:0.15}40.7%{opacity:0.15}40.71%{opacity:1}47.67%{opacity:1}47.68%{opacity:0.15}52.33%{opacity:0.15}52.34%{opacity:1}59.3%{opacity:1}59.31%{opacity:0.15}100%{opacity:0.15}}@keyframes st-sn36{0%{opacity:0.15}41.86%{opacity:0.15}41.87%{opacity:1}48.84%{opacity:1}48.85%{opacity:0.15}51.16%{opacity:0.15}51.17%{opacity:1}58.14%{opacity:1}58.15%{opacity:0.15}100%{opacity:0.15}}
+#st-svg:hover .d0{animation-name:st-sn0}#st-svg:hover .d1{animation-name:st-sn1}#st-svg:hover .d2{animation-name:st-sn2}#st-svg:hover .d3{animation-name:st-sn3}#st-svg:hover .d4{animation-name:st-sn4}#st-svg:hover .d5{animation-name:st-sn5}#st-svg:hover .d6{animation-name:st-sn6}#st-svg:hover .d7{animation-name:st-sn7}#st-svg:hover .d8{animation-name:st-sn8}#st-svg:hover .d9{animation-name:st-sn9}#st-svg:hover .d10{animation-name:st-sn10}#st-svg:hover .d11{animation-name:st-sn11}#st-svg:hover .d12{animation-name:st-sn12}#st-svg:hover .d13{animation-name:st-sn13}#st-svg:hover .d14{animation-name:st-sn14}#st-svg:hover .d15{animation-name:st-sn15}#st-svg:hover .d16{animation-name:st-sn16}#st-svg:hover .d17{animation-name:st-sn17}#st-svg:hover .d18{animation-name:st-sn18}#st-svg:hover .d19{animation-name:st-sn19}#st-svg:hover .d20{animation-name:st-sn20}#st-svg:hover .d21{animation-name:st-sn21}#st-svg:hover .d22{animation-name:st-sn22}#st-svg:hover .d23{animation-name:st-sn23}#st-svg:hover .d24{animation-name:st-sn24}#st-svg:hover .d25{animation-name:st-sn25}#st-svg:hover .d26{animation-name:st-sn26}#st-svg:hover .d27{animation-name:st-sn27}#st-svg:hover .d28{animation-name:st-sn28}#st-svg:hover .d29{animation-name:st-sn29}#st-svg:hover .d30{animation-name:st-sn30}#st-svg:hover .d31{animation-name:st-sn31}#st-svg:hover .d32{animation-name:st-sn32}#st-svg:hover .d33{animation-name:st-sn33}#st-svg:hover .d34{animation-name:st-sn34}#st-svg:hover .d35{animation-name:st-sn35}#st-svg:hover .d36{animation-name:st-sn36}
+</style>
+
+<!-- ── Inspections snake styles ── -->
+<style>
+#ins-svg:hover circle{opacity:0.15;}
+#ins-svg:hover .sq{animation-duration:4s;animation-timing-function:step-start;animation-iteration-count:infinite;}
+@keyframes ins-sn0{0%{opacity:0.15}0.01%{opacity:1}17.65%{opacity:1}17.66%{opacity:0.15}82.35%{opacity:0.15}82.36%{opacity:1}100.0%{opacity:1}100%{opacity:0.15}}@keyframes ins-sn1{0%{opacity:0.15}2.94%{opacity:0.15}2.95%{opacity:1}20.59%{opacity:1}20.60%{opacity:0.15}79.41%{opacity:0.15}79.42%{opacity:1}97.06%{opacity:1}97.07%{opacity:0.15}100%{opacity:0.15}}@keyframes ins-sn2{0%{opacity:0.15}5.88%{opacity:0.15}5.89%{opacity:1}23.53%{opacity:1}23.54%{opacity:0.15}76.47%{opacity:0.15}76.48%{opacity:1}94.12%{opacity:1}94.13%{opacity:0.15}100%{opacity:0.15}}@keyframes ins-sn3{0%{opacity:0.15}8.82%{opacity:0.15}8.83%{opacity:1}26.47%{opacity:1}26.48%{opacity:0.15}73.53%{opacity:0.15}73.54%{opacity:1}91.18%{opacity:1}91.19%{opacity:0.15}100%{opacity:0.15}}@keyframes ins-sn4{0%{opacity:0.15}11.76%{opacity:0.15}11.77%{opacity:1}29.41%{opacity:1}29.42%{opacity:0.15}70.59%{opacity:0.15}70.60%{opacity:1}88.24%{opacity:1}88.25%{opacity:0.15}100%{opacity:0.15}}@keyframes ins-sn5{0%{opacity:0.15}14.71%{opacity:0.15}14.72%{opacity:1}32.35%{opacity:1}32.36%{opacity:0.15}67.65%{opacity:0.15}67.66%{opacity:1}85.29%{opacity:1}85.30%{opacity:0.15}100%{opacity:0.15}}@keyframes ins-sn6{0%{opacity:0.15}17.65%{opacity:0.15}17.66%{opacity:1}35.29%{opacity:1}35.30%{opacity:0.15}64.71%{opacity:0.15}64.72%{opacity:1}82.35%{opacity:1}82.36%{opacity:0.15}100%{opacity:0.15}}@keyframes ins-sn7{0%{opacity:0.15}20.59%{opacity:0.15}20.60%{opacity:1}38.24%{opacity:1}38.25%{opacity:0.15}61.76%{opacity:0.15}61.77%{opacity:1}79.41%{opacity:1}79.42%{opacity:0.15}100%{opacity:0.15}}@keyframes ins-sn8{0%{opacity:0.15}23.53%{opacity:0.15}23.54%{opacity:1}41.18%{opacity:1}41.19%{opacity:0.15}58.82%{opacity:0.15}58.83%{opacity:1}76.47%{opacity:1}76.48%{opacity:0.15}100%{opacity:0.15}}@keyframes ins-sn9{0%{opacity:0.15}26.47%{opacity:0.15}26.48%{opacity:1}44.12%{opacity:1}44.13%{opacity:0.15}55.88%{opacity:0.15}55.89%{opacity:1}73.53%{opacity:1}73.54%{opacity:0.15}100%{opacity:0.15}}@keyframes ins-sn10{0%{opacity:0.15}29.41%{opacity:0.15}29.42%{opacity:1}47.06%{opacity:1}47.07%{opacity:0.15}52.94%{opacity:0.15}52.95%{opacity:1}70.59%{opacity:1}70.60%{opacity:0.15}100%{opacity:0.15}}
+#ins-svg:hover .d0{animation-name:ins-sn0}#ins-svg:hover .d1{animation-name:ins-sn1}#ins-svg:hover .d2{animation-name:ins-sn2}#ins-svg:hover .d3{animation-name:ins-sn3}#ins-svg:hover .d4{animation-name:ins-sn4}#ins-svg:hover .d5{animation-name:ins-sn5}#ins-svg:hover .d6{animation-name:ins-sn6}#ins-svg:hover .d7{animation-name:ins-sn7}#ins-svg:hover .d8{animation-name:ins-sn8}#ins-svg:hover .d9{animation-name:ins-sn9}#ins-svg:hover .d10{animation-name:ins-sn10}
+</style>
+
+<!-- ── Interior2 snake styles ── -->
+<style>
+#int2-svg:hover circle{opacity:0.15;}
+#int2-svg:hover .sq{animation-duration:4s;animation-timing-function:step-start;animation-iteration-count:infinite;}
+@keyframes int2-sn0{0%{opacity:0.15}0.01%{opacity:1}10.0%{opacity:1}10.01%{opacity:0.15}90.0%{opacity:0.15}90.01%{opacity:1}100.0%{opacity:1}100%{opacity:0.15}}@keyframes int2-sn1{0%{opacity:0.15}1.67%{opacity:0.15}1.68%{opacity:1}11.67%{opacity:1}11.68%{opacity:0.15}88.33%{opacity:0.15}88.34%{opacity:1}98.33%{opacity:1}98.34%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn2{0%{opacity:0.15}3.33%{opacity:0.15}3.34%{opacity:1}13.33%{opacity:1}13.34%{opacity:0.15}86.67%{opacity:0.15}86.68%{opacity:1}96.67%{opacity:1}96.68%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn3{0%{opacity:0.15}5.0%{opacity:0.15}5.01%{opacity:1}15.0%{opacity:1}15.01%{opacity:0.15}85.0%{opacity:0.15}85.01%{opacity:1}95.0%{opacity:1}95.01%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn4{0%{opacity:0.15}6.67%{opacity:0.15}6.68%{opacity:1}16.67%{opacity:1}16.68%{opacity:0.15}83.33%{opacity:0.15}83.34%{opacity:1}93.33%{opacity:1}93.34%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn5{0%{opacity:0.15}8.33%{opacity:0.15}8.34%{opacity:1}18.33%{opacity:1}18.34%{opacity:0.15}81.67%{opacity:0.15}81.68%{opacity:1}91.67%{opacity:1}91.68%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn6{0%{opacity:0.15}10.0%{opacity:0.15}10.01%{opacity:1}20.0%{opacity:1}20.01%{opacity:0.15}80.0%{opacity:0.15}80.01%{opacity:1}90.0%{opacity:1}90.01%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn7{0%{opacity:0.15}11.67%{opacity:0.15}11.68%{opacity:1}21.67%{opacity:1}21.68%{opacity:0.15}78.33%{opacity:0.15}78.34%{opacity:1}88.33%{opacity:1}88.34%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn8{0%{opacity:0.15}13.33%{opacity:0.15}13.34%{opacity:1}23.33%{opacity:1}23.34%{opacity:0.15}76.67%{opacity:0.15}76.68%{opacity:1}86.67%{opacity:1}86.68%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn9{0%{opacity:0.15}15.0%{opacity:0.15}15.01%{opacity:1}25.0%{opacity:1}25.01%{opacity:0.15}75.0%{opacity:0.15}75.01%{opacity:1}85.0%{opacity:1}85.01%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn10{0%{opacity:0.15}16.67%{opacity:0.15}16.68%{opacity:1}26.67%{opacity:1}26.68%{opacity:0.15}73.33%{opacity:0.15}73.34%{opacity:1}83.33%{opacity:1}83.34%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn11{0%{opacity:0.15}18.33%{opacity:0.15}18.34%{opacity:1}28.33%{opacity:1}28.34%{opacity:0.15}71.67%{opacity:0.15}71.68%{opacity:1}81.67%{opacity:1}81.68%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn12{0%{opacity:0.15}20.0%{opacity:0.15}20.01%{opacity:1}30.0%{opacity:1}30.01%{opacity:0.15}70.0%{opacity:0.15}70.01%{opacity:1}80.0%{opacity:1}80.01%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn13{0%{opacity:0.15}21.67%{opacity:0.15}21.68%{opacity:1}31.67%{opacity:1}31.68%{opacity:0.15}68.33%{opacity:0.15}68.34%{opacity:1}78.33%{opacity:1}78.34%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn14{0%{opacity:0.15}23.33%{opacity:0.15}23.34%{opacity:1}33.33%{opacity:1}33.34%{opacity:0.15}66.67%{opacity:0.15}66.68%{opacity:1}76.67%{opacity:1}76.68%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn15{0%{opacity:0.15}25.0%{opacity:0.15}25.01%{opacity:1}35.0%{opacity:1}35.01%{opacity:0.15}65.0%{opacity:0.15}65.01%{opacity:1}75.0%{opacity:1}75.01%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn16{0%{opacity:0.15}26.67%{opacity:0.15}26.68%{opacity:1}36.67%{opacity:1}36.68%{opacity:0.15}63.33%{opacity:0.15}63.34%{opacity:1}73.33%{opacity:1}73.34%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn17{0%{opacity:0.15}28.33%{opacity:0.15}28.34%{opacity:1}38.33%{opacity:1}38.34%{opacity:0.15}61.67%{opacity:0.15}61.68%{opacity:1}71.67%{opacity:1}71.68%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn18{0%{opacity:0.15}30.0%{opacity:0.15}30.01%{opacity:1}40.0%{opacity:1}40.01%{opacity:0.15}60.0%{opacity:0.15}60.01%{opacity:1}70.0%{opacity:1}70.01%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn19{0%{opacity:0.15}31.67%{opacity:0.15}31.68%{opacity:1}41.67%{opacity:1}41.68%{opacity:0.15}58.33%{opacity:0.15}58.34%{opacity:1}68.33%{opacity:1}68.34%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn20{0%{opacity:0.15}33.33%{opacity:0.15}33.34%{opacity:1}43.33%{opacity:1}43.34%{opacity:0.15}56.67%{opacity:0.15}56.68%{opacity:1}66.67%{opacity:1}66.68%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn21{0%{opacity:0.15}35.0%{opacity:0.15}35.01%{opacity:1}45.0%{opacity:1}45.01%{opacity:0.15}55.0%{opacity:0.15}55.01%{opacity:1}65.0%{opacity:1}65.01%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn22{0%{opacity:0.15}36.67%{opacity:0.15}36.68%{opacity:1}46.67%{opacity:1}46.68%{opacity:0.15}53.33%{opacity:0.15}53.34%{opacity:1}63.33%{opacity:1}63.34%{opacity:0.15}100%{opacity:0.15}}@keyframes int2-sn23{0%{opacity:0.15}38.33%{opacity:0.15}38.34%{opacity:1}48.33%{opacity:1}48.34%{opacity:0.15}51.67%{opacity:0.15}51.68%{opacity:1}61.67%{opacity:1}61.68%{opacity:0.15}100%{opacity:0.15}}
+#int2-svg:hover .d0{animation-name:int2-sn0}#int2-svg:hover .d1{animation-name:int2-sn1}#int2-svg:hover .d2{animation-name:int2-sn2}#int2-svg:hover .d3{animation-name:int2-sn3}#int2-svg:hover .d4{animation-name:int2-sn4}#int2-svg:hover .d5{animation-name:int2-sn5}#int2-svg:hover .d6{animation-name:int2-sn6}#int2-svg:hover .d7{animation-name:int2-sn7}#int2-svg:hover .d8{animation-name:int2-sn8}#int2-svg:hover .d9{animation-name:int2-sn9}#int2-svg:hover .d10{animation-name:int2-sn10}#int2-svg:hover .d11{animation-name:int2-sn11}#int2-svg:hover .d12{animation-name:int2-sn12}#int2-svg:hover .d13{animation-name:int2-sn13}#int2-svg:hover .d14{animation-name:int2-sn14}#int2-svg:hover .d15{animation-name:int2-sn15}#int2-svg:hover .d16{animation-name:int2-sn16}#int2-svg:hover .d17{animation-name:int2-sn17}#int2-svg:hover .d18{animation-name:int2-sn18}#int2-svg:hover .d19{animation-name:int2-sn19}#int2-svg:hover .d20{animation-name:int2-sn20}#int2-svg:hover .d21{animation-name:int2-sn21}#int2-svg:hover .d22{animation-name:int2-sn22}#int2-svg:hover .d23{animation-name:int2-sn23}
+</style>
+
+<!-- ── Mechanical2 snake styles ── -->
+<style>
+#mec2-svg:hover circle{opacity:0.15;}
+#mec2-svg:hover .sq{animation-duration:4s;animation-timing-function:step-start;animation-iteration-count:infinite;}
+@keyframes mec2-sn0{0%{opacity:0.15}0.01%{opacity:1}9.38%{opacity:1}9.39%{opacity:0.15}90.62%{opacity:0.15}90.63%{opacity:1}100.0%{opacity:1}100%{opacity:0.15}}@keyframes mec2-sn1{0%{opacity:0.15}1.56%{opacity:0.15}1.57%{opacity:1}10.94%{opacity:1}10.95%{opacity:0.15}89.06%{opacity:0.15}89.07%{opacity:1}98.44%{opacity:1}98.45%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn2{0%{opacity:0.15}3.12%{opacity:0.15}3.13%{opacity:1}12.5%{opacity:1}12.51%{opacity:0.15}87.5%{opacity:0.15}87.51%{opacity:1}96.88%{opacity:1}96.89%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn3{0%{opacity:0.15}4.69%{opacity:0.15}4.70%{opacity:1}14.06%{opacity:1}14.07%{opacity:0.15}85.94%{opacity:0.15}85.95%{opacity:1}95.31%{opacity:1}95.32%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn4{0%{opacity:0.15}6.25%{opacity:0.15}6.26%{opacity:1}15.62%{opacity:1}15.63%{opacity:0.15}84.38%{opacity:0.15}84.39%{opacity:1}93.75%{opacity:1}93.76%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn5{0%{opacity:0.15}7.81%{opacity:0.15}7.82%{opacity:1}17.19%{opacity:1}17.20%{opacity:0.15}82.81%{opacity:0.15}82.82%{opacity:1}92.19%{opacity:1}92.20%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn6{0%{opacity:0.15}9.38%{opacity:0.15}9.39%{opacity:1}18.75%{opacity:1}18.76%{opacity:0.15}81.25%{opacity:0.15}81.26%{opacity:1}90.62%{opacity:1}90.63%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn7{0%{opacity:0.15}10.94%{opacity:0.15}10.95%{opacity:1}20.31%{opacity:1}20.32%{opacity:0.15}79.69%{opacity:0.15}79.70%{opacity:1}89.06%{opacity:1}89.07%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn8{0%{opacity:0.15}12.5%{opacity:0.15}12.51%{opacity:1}21.88%{opacity:1}21.89%{opacity:0.15}78.12%{opacity:0.15}78.13%{opacity:1}87.5%{opacity:1}87.51%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn9{0%{opacity:0.15}14.06%{opacity:0.15}14.07%{opacity:1}23.44%{opacity:1}23.45%{opacity:0.15}76.56%{opacity:0.15}76.57%{opacity:1}85.94%{opacity:1}85.95%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn10{0%{opacity:0.15}15.62%{opacity:0.15}15.63%{opacity:1}25.0%{opacity:1}25.01%{opacity:0.15}75.0%{opacity:0.15}75.01%{opacity:1}84.38%{opacity:1}84.39%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn11{0%{opacity:0.15}17.19%{opacity:0.15}17.20%{opacity:1}26.56%{opacity:1}26.57%{opacity:0.15}73.44%{opacity:0.15}73.45%{opacity:1}82.81%{opacity:1}82.82%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn12{0%{opacity:0.15}18.75%{opacity:0.15}18.76%{opacity:1}28.12%{opacity:1}28.13%{opacity:0.15}71.88%{opacity:0.15}71.89%{opacity:1}81.25%{opacity:1}81.26%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn13{0%{opacity:0.15}20.31%{opacity:0.15}20.32%{opacity:1}29.69%{opacity:1}29.70%{opacity:0.15}70.31%{opacity:0.15}70.32%{opacity:1}79.69%{opacity:1}79.70%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn14{0%{opacity:0.15}21.88%{opacity:0.15}21.89%{opacity:1}31.25%{opacity:1}31.26%{opacity:0.15}68.75%{opacity:0.15}68.76%{opacity:1}78.12%{opacity:1}78.13%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn15{0%{opacity:0.15}23.44%{opacity:0.15}23.45%{opacity:1}32.81%{opacity:1}32.82%{opacity:0.15}67.19%{opacity:0.15}67.20%{opacity:1}76.56%{opacity:1}76.57%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn16{0%{opacity:0.15}25.0%{opacity:0.15}25.01%{opacity:1}34.38%{opacity:1}34.39%{opacity:0.15}65.62%{opacity:0.15}65.63%{opacity:1}75.0%{opacity:1}75.01%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn17{0%{opacity:0.15}26.56%{opacity:0.15}26.57%{opacity:1}35.94%{opacity:1}35.95%{opacity:0.15}64.06%{opacity:0.15}64.07%{opacity:1}73.44%{opacity:1}73.45%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn18{0%{opacity:0.15}28.12%{opacity:0.15}28.13%{opacity:1}37.5%{opacity:1}37.51%{opacity:0.15}62.5%{opacity:0.15}62.51%{opacity:1}71.88%{opacity:1}71.89%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn19{0%{opacity:0.15}29.69%{opacity:0.15}29.70%{opacity:1}39.06%{opacity:1}39.07%{opacity:0.15}60.94%{opacity:0.15}60.95%{opacity:1}70.31%{opacity:1}70.32%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn20{0%{opacity:0.15}31.25%{opacity:0.15}31.26%{opacity:1}40.62%{opacity:1}40.63%{opacity:0.15}59.38%{opacity:0.15}59.39%{opacity:1}68.75%{opacity:1}68.76%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn21{0%{opacity:0.15}32.81%{opacity:0.15}32.82%{opacity:1}42.19%{opacity:1}42.20%{opacity:0.15}57.81%{opacity:0.15}57.82%{opacity:1}67.19%{opacity:1}67.20%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn22{0%{opacity:0.15}34.38%{opacity:0.15}34.39%{opacity:1}43.75%{opacity:1}43.76%{opacity:0.15}56.25%{opacity:0.15}56.26%{opacity:1}65.62%{opacity:1}65.63%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn23{0%{opacity:0.15}35.94%{opacity:0.15}35.95%{opacity:1}45.31%{opacity:1}45.32%{opacity:0.15}54.69%{opacity:0.15}54.70%{opacity:1}64.06%{opacity:1}64.07%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn24{0%{opacity:0.15}37.5%{opacity:0.15}37.51%{opacity:1}46.88%{opacity:1}46.89%{opacity:0.15}53.12%{opacity:0.15}53.13%{opacity:1}62.5%{opacity:1}62.51%{opacity:0.15}100%{opacity:0.15}}@keyframes mec2-sn25{0%{opacity:0.15}39.06%{opacity:0.15}39.07%{opacity:1}48.44%{opacity:1}48.45%{opacity:0.15}51.56%{opacity:0.15}51.57%{opacity:1}60.94%{opacity:1}60.95%{opacity:0.15}100%{opacity:0.15}}
+#mec2-svg:hover .d0{animation-name:mec2-sn0}#mec2-svg:hover .d1{animation-name:mec2-sn1}#mec2-svg:hover .d2{animation-name:mec2-sn2}#mec2-svg:hover .d3{animation-name:mec2-sn3}#mec2-svg:hover .d4{animation-name:mec2-sn4}#mec2-svg:hover .d5{animation-name:mec2-sn5}#mec2-svg:hover .d6{animation-name:mec2-sn6}#mec2-svg:hover .d7{animation-name:mec2-sn7}#mec2-svg:hover .d8{animation-name:mec2-sn8}#mec2-svg:hover .d9{animation-name:mec2-sn9}#mec2-svg:hover .d10{animation-name:mec2-sn10}#mec2-svg:hover .d11{animation-name:mec2-sn11}#mec2-svg:hover .d12{animation-name:mec2-sn12}#mec2-svg:hover .d13{animation-name:mec2-sn13}#mec2-svg:hover .d14{animation-name:mec2-sn14}#mec2-svg:hover .d15{animation-name:mec2-sn15}#mec2-svg:hover .d16{animation-name:mec2-sn16}#mec2-svg:hover .d17{animation-name:mec2-sn17}#mec2-svg:hover .d18{animation-name:mec2-sn18}#mec2-svg:hover .d19{animation-name:mec2-sn19}#mec2-svg:hover .d20{animation-name:mec2-sn20}#mec2-svg:hover .d21{animation-name:mec2-sn21}#mec2-svg:hover .d22{animation-name:mec2-sn22}#mec2-svg:hover .d23{animation-name:mec2-sn23}#mec2-svg:hover .d24{animation-name:mec2-sn24}#mec2-svg:hover .d25{animation-name:mec2-sn25}
+</style>
+
+<div class="solutions-interaction" id="solutions">
+  <div class="solutions-sticky" id="sticky">
+
+    <!-- Background panels -->
+    <div class="slide-panel"><div class="panel-bg"></div></div>
+    <div class="slide-panel"><div class="panel-bg"></div></div>
+    <div class="slide-panel"><div class="panel-bg"></div></div>
+    <div class="slide-panel"><div class="panel-bg"></div></div>
+
+    <!-- Single fixed card overlay -->
+    <div class="solutions-card-overlay">
+      <div class="card-solution">
+        <div class="card-solution-inside">
+          <div class="card-border"><span class="cb-left"></span><span class="cb-right"></span></div>
+
+          <!-- Static header -->
+          <div class="header-card">
+            <div class="base-txt-badge">Services</div>
+            <div class="numbers-solutions" id="card-counter">
+              <span id="card-current">1</span><span>/</span><span>4</span>
+            </div>
+          </div>
+
+          <!-- Clip-path wipe content slots -->
+          <div class="card-content-slot">
+
+            <!-- Slide 0: Storage Solutions -->
+            <div class="card-slide-content" data-slide="0">
+              <a href="/storage-solutions/" class="solution-title-box">
+                <div class="st-wrap">
+                  <svg id="st-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" width="90" height="90">
+<circle class="sq d0" cx="1.55" cy="1.97" r="1.5"/>
+<circle class="sq d1" cx="7.4" cy="1.98" r="1.5"/>
+<circle class="sq d2" cx="13.25" cy="1.98" r="1.5"/>
+<circle class="sq d3" cx="19.09" cy="1.97" r="1.5"/>
+<circle class="sq d4" cx="24.95" cy="1.98" r="1.5"/>
+<circle class="sq d5" cx="30.8" cy="1.97" r="1.5"/>
+<circle class="sq d6" cx="36.64" cy="1.97" r="1.5"/>
+<circle class="sq d7" cx="36.64" cy="7.82" r="1.5"/>
+<circle class="sq d8" cx="36.65" cy="13.66" r="1.5"/>
+<circle class="sq d9" cx="36.65" cy="19.51" r="1.5"/>
+<circle class="sq d10" cx="36.65" cy="25.37" r="1.5"/>
+<circle class="sq d11" cx="36.65" cy="31.22" r="1.5"/>
+<circle class="sq d12" cx="36.64" cy="37.07" r="1.5"/>
+<circle class="sq d13" cx="30.8" cy="37.07" r="1.5"/>
+<circle class="sq d14" cx="24.95" cy="37.08" r="1.5"/>
+<circle class="sq d15" cx="19.09" cy="37.07" r="1.5"/>
+<circle class="sq d16" cx="13.25" cy="37.08" r="1.5"/>
+<circle class="sq d17" cx="7.4" cy="37.08" r="1.5"/>
+<circle class="sq d18" cx="1.55" cy="37.07" r="1.5"/>
+<circle class="sq d19" cx="1.56" cy="31.22" r="1.5"/>
+<circle class="sq d20" cx="1.56" cy="25.37" r="1.5"/>
+<circle class="sq d21" cx="1.56" cy="19.51" r="1.5"/>
+<circle class="sq d22" cx="1.55" cy="13.65" r="1.5"/>
+<circle class="sq d23" cx="1.55" cy="7.82" r="1.5"/>
+<circle class="sq d24" cx="7.4" cy="13.66" r="1.5"/>
+<circle class="sq d25" cx="13.25" cy="13.66" r="1.5"/>
+<circle class="sq d26" cx="19.09" cy="13.65" r="1.5"/>
+<circle class="sq d27" cx="24.95" cy="13.66" r="1.5"/>
+<circle class="sq d28" cx="30.8" cy="13.65" r="1.5"/>
+<circle class="sq d29" cx="19.09" cy="7.82" r="1.5"/>
+<circle class="sq d30" cx="19.09" cy="19.52" r="1.5"/>
+<circle class="sq d31" cx="19.09" cy="31.22" r="1.5"/>
+<circle class="sq d32" cx="7.4" cy="25.37" r="1.5"/>
+<circle class="sq d33" cx="13.25" cy="25.37" r="1.5"/>
+<circle class="sq d34" cx="19.1" cy="25.37" r="1.5"/>
+<circle class="sq d35" cx="24.95" cy="25.38" r="1.5"/>
+<circle class="sq d36" cx="30.8" cy="25.37" r="1.5"/>
+                  </svg>
+                </div>
+                <span class="solutions-title-card">Storage Solutions</span>
+              </a>
+              <div class="chips-cases">
+                <a href="/pallet-racking/" class="chips-solutions">Pallet Racking</a>
+                <a href="/shelving-systems/" class="chips-solutions">Shelving Systems</a>
+                <a href="/automotive-parts-shelving/" class="chips-solutions">Automotive Parts Shelving</a>
+                <a href="/mezzanine-floors/" class="chips-solutions">Mezzanine Floors</a>
+                <a href="/steel-partitioning/" class="chips-solutions">Steel Partitioning</a>
+                <a href="/workplace-equipment/" class="chips-solutions">Workplace Equipment</a>
+              </div>
+            </div>
+
+            <!-- Slide 1: Racking Inspections -->
+            <div class="card-slide-content" data-slide="1">
+              <a href="/racking-inspections/" class="solution-title-box">
+                <div class="ins-wrap">
+                  <svg id="ins-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" width="90" height="90">
+<circle class="sq d0" cx="5.6" cy="2.03" r="1.5"/>
+<circle class="sq d1" cx="5.6" cy="9.02" r="1.5"/>
+<circle class="sq d2" cx="5.6" cy="16.01" r="1.5"/>
+<circle class="sq d3" cx="5.6" cy="22.99" r="1.5"/>
+<circle class="sq d4" cx="5.6" cy="36.97" r="1.5"/>
+<circle class="sq d5" cx="2.1" cy="29.97" r="1.5"/>
+<circle class="sq d6" cx="9.05" cy="29.98" r="1.5"/>
+<circle class="sq d7" cx="16.01" cy="29.98" r="1.5"/>
+<circle class="sq d8" cx="22.97" cy="29.98" r="1.5"/>
+<circle class="sq d9" cx="29.94" cy="29.97" r="1.5"/>
+<circle class="sq d10" cx="36.9" cy="29.97" r="1.5"/>
+                  </svg>
+                </div>
+                <span class="solutions-title-card">Racking Inspections</span>
+              </a>
+              <div class="chips-cases">
+                <a href="/sema-approved-rack-inspectors/" class="chips-solutions">SEMA Approved Rack Inspectors</a>
+                <a href="/rack-awareness-training/" class="chips-solutions">Rack Awareness Training</a>
+              </div>
+            </div>
+
+            <!-- Slide 2: Interior Fit-Out -->
+            <div class="card-slide-content" data-slide="2">
+              <a href="/interior-fit-out/" class="solution-title-box">
+                <div class="int2-wrap">
+                  <svg id="int2-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" width="90" height="90">
+<circle class="sq d0" cx="2.12" cy="2.78" r="1.5"/>
+<circle class="sq d1" cx="8.96" cy="2.78" r="1.5"/>
+<circle class="sq d2" cx="15.8" cy="2.78" r="1.5"/>
+<circle class="sq d3" cx="22.73" cy="2.78" r="1.5"/>
+<circle class="sq d4" cx="29.58" cy="2.78" r="1.5"/>
+<circle class="sq d5" cx="36.42" cy="2.78" r="1.5"/>
+<circle class="sq d6" cx="36.42" cy="9.55" r="1.5"/>
+<circle class="sq d7" cx="36.42" cy="16.32" r="1.5"/>
+<circle class="sq d8" cx="36.42" cy="23.15" r="1.5"/>
+<circle class="sq d9" cx="36.42" cy="36.55" r="1.5"/>
+<circle class="sq d10" cx="29.58" cy="36.55" r="1.5"/>
+<circle class="sq d11" cx="22.73" cy="36.55" r="1.5"/>
+<circle class="sq d12" cx="15.8" cy="36.55" r="1.5"/>
+<circle class="sq d13" cx="8.96" cy="36.55" r="1.5"/>
+<circle class="sq d14" cx="2.12" cy="36.55" r="1.5"/>
+<circle class="sq d15" cx="2.12" cy="29.85" r="1.5"/>
+<circle class="sq d16" cx="2.12" cy="23.15" r="1.5"/>
+<circle class="sq d17" cx="2.12" cy="16.32" r="1.5"/>
+<circle class="sq d18" cx="2.12" cy="9.55" r="1.5"/>
+<circle class="sq d19" cx="15.8" cy="9.55" r="1.5"/>
+<circle class="sq d20" cx="15.8" cy="16.32" r="1.5"/>
+<circle class="sq d21" cx="15.8" cy="23.15" r="1.5"/>
+<circle class="sq d22" cx="22.73" cy="23.15" r="1.5"/>
+<circle class="sq d23" cx="29.58" cy="23.15" r="1.5"/>
+                  </svg>
+                </div>
+                <span class="solutions-title-card">Interior Fit-Out</span>
+              </a>
+              <div class="chips-cases">
+                <a href="/partitioning/" class="chips-solutions">Partitioning</a>
+                <a href="/doors-joinery-services/" class="chips-solutions">Doors &amp; Joinery Services</a>
+                <a href="/ceilings/" class="chips-solutions">Ceilings</a>
+                <a href="/commercial-flooring/" class="chips-solutions">Commercial Flooring</a>
+                <a href="/welfare-area/" class="chips-solutions">Welfare Area</a>
+                <a href="/decorating/" class="chips-solutions">Decorating</a>
+                <a href="/dilapidation/" class="chips-solutions">Dilapidation</a>
+              </div>
+            </div>
+
+            <!-- Slide 3: Mechanical & Electrical -->
+            <div class="card-slide-content" data-slide="3">
+              <a href="/mechanical-electrical/" class="solution-title-box">
+                <div class="mec2-wrap">
+                  <svg id="mec2-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" width="90" height="90">
+<circle class="sq d0" cx="1.93" cy="8.09" r="1.5"/>
+<circle class="sq d1" cx="7.27" cy="8.04" r="1.5"/>
+<circle class="sq d2" cx="12.61" cy="8.04" r="1.5"/>
+<circle class="sq d3" cx="19.5" cy="8.98" r="1.5"/>
+<circle class="sq d4" cx="19.5" cy="3.2" r="1.5"/>
+<circle class="sq d5" cx="26.39" cy="8.09" r="1.5"/>
+<circle class="sq d6" cx="31.73" cy="8.04" r="1.5"/>
+<circle class="sq d7" cx="37.07" cy="8.04" r="1.5"/>
+<circle class="sq d8" cx="37.07" cy="30.44" r="1.5"/>
+<circle class="sq d9" cx="31.73" cy="30.44" r="1.5"/>
+<circle class="sq d10" cx="26.39" cy="30.49" r="1.5"/>
+<circle class="sq d11" cx="19.5" cy="29.55" r="1.5"/>
+<circle class="sq d12" cx="19.5" cy="35.47" r="1.5"/>
+<circle class="sq d13" cx="12.61" cy="30.47" r="1.5"/>
+<circle class="sq d14" cx="7.27" cy="30.44" r="1.5"/>
+<circle class="sq d15" cx="1.93" cy="30.49" r="1.5"/>
+<circle class="sq d16" cx="1.93" cy="19.27" r="1.5"/>
+<circle class="sq d17" cx="12.61" cy="13.89" r="1.5"/>
+<circle class="sq d18" cx="12.61" cy="19.27" r="1.5"/>
+<circle class="sq d19" cx="12.61" cy="24.65" r="1.5"/>
+<circle class="sq d20" cx="16.08" cy="13.89" r="1.5"/>
+<circle class="sq d21" cx="19.5" cy="19.27" r="1.5"/>
+<circle class="sq d22" cx="22.96" cy="24.65" r="1.5"/>
+<circle class="sq d23" cx="26.39" cy="13.89" r="1.5"/>
+<circle class="sq d24" cx="26.39" cy="19.27" r="1.5"/>
+<circle class="sq d25" cx="26.39" cy="24.65" r="1.5"/>
+                  </svg>
+                </div>
+                <span class="solutions-title-card">Mechanical &amp; Electrical</span>
+              </a>
+              <div class="chips-cases">
+                <a href="/mechanical/" class="chips-solutions">Mechanical</a>
+                <a href="/electrical-services/" class="chips-solutions">Electrical Services</a>
+                <a href="/energy-solutions/" class="chips-solutions">Energy Solutions</a>
+                <a href="/design-services/" class="chips-solutions">Design Services</a>
+              </div>
+            </div>
+
+          </div><!-- /card-content-slot -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Dots -->
+    <div class="scroll-dots" id="scroll-dots">
+      <div class="scroll-dot is-active" data-slide="0"></div>
+      <div class="scroll-dot" data-slide="1"></div>
+      <div class="scroll-dot" data-slide="2"></div>
+      <div class="scroll-dot" data-slide="3"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  const section     = document.getElementById('solutions');
+  const panels      = Array.from(document.querySelectorAll('.slide-panel'));
+  const dotsWrap    = document.getElementById('scroll-dots');
+  const dots        = Array.from(dotsWrap.querySelectorAll('.scroll-dot'));
+  const cardSlots   = Array.from(document.querySelectorAll('.card-slide-content'));
+  const cardCurrent = document.getElementById('card-current');
+  const card        = document.querySelector('.card-solution-inside');
+  const N           = panels.length;
+ 
+  function setHeight() {
+    section.style.height = (N * window.innerHeight) + 'px';
+  }
+  setHeight();
+  window.addEventListener('resize', () => { setHeight(); update(); }, { passive: true });
+ 
+  // Stack panels: first visible, rest pushed down
+  panels.forEach((p, i) => {
+    if (i > 0) p.style.transform = 'translateY(100vh)';
+  });
+ 
+  // All slots hidden by default via clip-path (set in CSS)
+  // No opacity manipulation needed
+ 
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+ 
+  let ticking = false;
+ 
+  function update() {
+    ticking = false;
+    const scrollY = window.scrollY;
+    const wrapTop = section.getBoundingClientRect().top + scrollY;
+    const vh      = window.innerHeight;
+    const raw     = (scrollY - wrapTop) / vh;
+ 
+    let activeDot = 0;
+ 
+    // ── Background panels ──
+    panels.forEach((panel, i) => {
+      const enterT    = i === 0 ? 1 : clamp(raw - (i - 1), 0, 1);
+      const easedIn   = easeInOut(enterT);
+      const slideY    = (1 - easedIn) * 100;
+      const buryT     = clamp(raw - i, 0, 1);
+      const easedBury = easeInOut(buryT);
+      const scale     = 1 - (1 - 0.88) * easedBury;
+      const blur      = 10 * easedBury;
+      const opacity   = 1 - (1 - 0.45) * easedBury;
+      panel.style.transform = `translateY(${slideY.toFixed(2)}vh) scale(${scale.toFixed(4)})`;
+      panel.style.filter    = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : 'none';
+      panel.style.opacity   = opacity.toFixed(4);
+      if (enterT >= 0.5) activeDot = i;
+    });
+ 
+    // ── Card wipe — reset all slots each frame ──
+    cardSlots.forEach(s => {
+      s.style.clipPath      = 'inset(0 0 100% 0)';
+      s.style.pointerEvents = 'none';
+    });
+ 
+    const cardRect   = card.getBoundingClientRect();
+    const cardTop    = cardRect.top;
+    const cardBottom = cardRect.bottom;
+    const cardHeight = cardRect.height;
+ 
+    let transitioning = false;
+ 
+    for (let i = 1; i < N; i++) {
+      const enterProgress = clamp(raw - (i - 1), 0, 1);
+ 
+      if (enterProgress > 0 && enterProgress < 1) {
+        transitioning = true;
+ 
+        // Actual top edge of the incoming panel in the viewport
+        const panelTopPx = panels[i].getBoundingClientRect().top;
+ 
+        // How many px of the card the panel has covered from the bottom
+        const coveredPx  = clamp(cardBottom - panelTopPx, 0, cardHeight);
+        const coveredPct = (coveredPx / cardHeight) * 100;
+ 
+        // Incoming slot: reveal bottom-first (chips appear first, title last)
+        // clip from top shrinks as panel rises — bottom of content appears first
+        cardSlots[i].style.clipPath =
+          `inset(${(100 - coveredPct).toFixed(2)}% 0 0 0)`;
+        cardSlots[i].style.pointerEvents = coveredPct > 50 ? 'auto' : 'none';
+ 
+        // Outgoing slot: wiped away from bottom upward
+        // clip from bottom grows as panel rises
+        cardSlots[i - 1].style.clipPath =
+          `inset(0 0 ${coveredPct.toFixed(2)}% 0)`;
+        cardSlots[i - 1].style.pointerEvents = coveredPct < 50 ? 'auto' : 'none';
+ 
+        break;
+      }
+    }
+ 
+    if (!transitioning) {
+      const activeIdx = Math.round(clamp(raw, 0, N - 1));
+      cardSlots[activeIdx].style.clipPath      = 'inset(0 0 0% 0)';
+      cardSlots[activeIdx].style.pointerEvents = 'auto';
+      cardCurrent.textContent = activeIdx + 1;
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === activeIdx));
+      return;
+    }
+ 
+    const activeIdx = Math.round(clamp(raw, 0, N - 1));
+    cardCurrent.textContent = activeIdx + 1;
+    dots.forEach((d, i) => d.classList.toggle('is-active', i === activeDot));
+  }
+ 
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx     = parseInt(dot.dataset.slide);
+      const wrapTop = section.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: wrapTop + idx * window.innerHeight, behavior: 'smooth' });
+    });
+  });
+ 
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+ 
+  update();
+})();
+	
+	
+	const iconSelectors = ['.st-wrap', '.insp-wrap', '.fitout-wrap', '.me-wrap'];
+
+  document.querySelectorAll('.solution-title-box').forEach((box, i) => {
+    const wrap = box.querySelector(iconSelectors[i]);
+    if (!wrap) return;
+    box.addEventListener('mouseenter', () => wrap.classList.add('is-hovering'));
+    box.addEventListener('mouseleave', () => wrap.classList.remove('is-hovering'));
+  });
+</script>
+
+
+    
+</body>
+</html>
