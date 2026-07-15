@@ -1,0 +1,401 @@
+<style>
+.page{background:#EEEBE6;display:grid;grid-template-columns:25% 40% 35%;min-height:700px;font-family:'Outfit',sans-serif;}
+.hover-group{display:contents;}
+.sidebar{padding:28px 16px 28px 0px;}
+.sb-item{display:block;width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:10px 0;font-size:36px;color:#1a1a1a;font-weight:400;font-family:'Outfit',sans-serif;transition:color 0.3s ease;}
+.sb-item:hover{color:#007f82;}
+.sb-item.active{color:#007f82;font-weight:600;}
+.acc-col{padding:24px 40px 24px 8px;overflow-y:auto;max-height:800px;}
+.acc-wrap{border-bottom:0.75px solid rgba(0,0,0,0.2);}
+.all-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0;font-size:26px;color:#1a1a1a;text-decoration:none;border-bottom:0.75px solid rgba(0,0,0,0.2);font-family:'Outfit',sans-serif;transition:color 0.3s ease;}
+.all-link:hover{color:#007f82;}
+.all-link-arrow{flex-shrink:0;width:22px;height:22px;transition:transform 0.25s ease;}
+.all-link:hover .all-link-arrow{transform:translateX(6px);}
+.acc-trigger{width:100%;background:none;border:none;cursor:pointer;padding:15px 0;display:flex;align-items:center;justify-content:space-between;font-size:26px;font-weight:400;color:#1a1a1a;text-align:left;gap:12px;font-family:'Outfit',sans-serif;transition:color 0.3s ease;}
+.acc-wrap:last-child .acc-body.open{border-bottom:1px solid #c4c0b8;}
+.ci{flex-shrink:0;width:22px;height:22px;transition:transform 0.3s ease;}
+.acc-trigger.open .ci{transform:rotate(45deg);}
+.acc-title-link{color:inherit;text-decoration:none;transition:color 0.3s ease;}
+.acc-title-link:hover{color:#007f82;}
+.acc-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease;}
+.acc-body.open{max-height:800px;}
+.acc-body ul{list-style:none;padding:2px 0 0px 0;margin-left:10px !important;}
+.acc-body ul li{padding:4px 0;list-style:none;font-family:'Outfit',sans-serif;}
+.acc-body ul li a{font-size:18px;color:#007f82;text-decoration:none;display:inline-block;transition:color 0.3s ease;}
+.acc-body ul li a:hover{color:#081F2D;}
+.direct-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 0;font-size:26px;color:#1a1a1a;text-decoration:none;border-bottom:0.75px solid rgba(0,0,0,0.2);font-weight:400;font-family:'Outfit',sans-serif;transition:color 0.3s ease;}
+.direct-link:hover{color:#007f82;}
+.direct-link-arrow{flex-shrink:0;width:22px;height:22px;transition:transform 0.25s ease;}
+.direct-link:hover .direct-link-arrow{transform:translateX(6px);}
+.img-col{padding:24px 0px 24px 120px;display:flex;flex-direction:column;}
+img.ci{max-width:30px !important;max-height:30px !important;}
+.img-frame{border-radius:4px;background:#d4d0ca;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;overflow:hidden;position:relative;}
+.img-frame i{font-size:48px;color:#007f82;}
+img.all-link-arrow, img.direct-link-arrow,img.mob-all-link-arrow, img.mob-direct-link-arrow {
+    width: 30px !important;
+    height: 30px !important;
+}
+#imgpic{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.3s ease;}
+#imgico{transition:opacity 0.3s ease;}
+.fade{animation:fi 0.3s ease;}
+@keyframes fi{from{opacity:0;}to{opacity:1;}}
+
+@media screen and (max-width: 1600px){
+  .acc-col{padding:24px 24px 24px 8px;overflow-y:auto;}
+  .sb-item{font-size:26px;}
+  
+  .page{grid-template-columns:30% 40% 30%;}
+  
+  .all-link, .acc-trigger, .direct-link{
+      font-size:20px;
+  }
+  
+  .img-col {
+      padding: 24px 0px 24px 80px;
+  }
+}
+
+@media screen and (max-width: 1080px){
+  .acc-col{padding:24px 24px 24px 8px;overflow-y:auto;}
+  .sb-item{font-size:26px;}
+  
+  .page{grid-template-columns:30% 45% 25%;}
+  
+  .all-link, .acc-trigger, .direct-link{
+      font-size:20px;
+  }
+  
+  .img-col {
+      padding: 24px 0px 24px 10px;
+  }
+}
+
+@media(max-width:767px){
+  .page{display:block;min-height:unset;}
+  .sidebar{display:none;}
+  .acc-col{display:none;max-height:none;overflow:visible;}
+  .img-col{display:none;}
+
+  .mobile-nav{display:flex;flex-direction:column;font-family:'Outfit',sans-serif;}
+  .mob-cat{border-bottom:0.75px solid rgba(0,0,0,0.2);}
+  .mob-cat:first-child{border-top:0.75px solid rgba(0,0,0,0.2);}
+  .mob-cat-btn{width:100%;background:none;border:none;cursor:pointer;padding:18px 0px;display:flex;align-items:center;justify-content:space-between;font-size:22px;font-weight:400;color:#1a1a1a;text-align:left;gap:12px;font-family:'Outfit',sans-serif;transition:color 0.3s ease;}
+  .mob-cat-btn.open{color:#007f82;font-weight:600;}
+  img.mob-cat-icon{width:20px !important;}
+  .mob-cat-icon{flex-shrink:0;width:20px;height:20px;transition:transform 0.3s ease;}
+  .mob-cat-btn.open .mob-cat-icon{transform:rotate(45deg);}
+  .mob-cat-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease;}
+  .mob-cat-body.open{max-height:2000px;}
+
+  .mob-acc-wrap{border-top:0.5px solid rgba(0,0,0,0.12);margin:0 16px;}
+  .mob-acc-trigger{width:100%;background:none;border:none;cursor:pointer;padding:16px 0;display:flex;align-items:center;justify-content:space-between;font-size:18px;font-weight:400;color:#1a1a1a;text-align:left;gap:10px;font-family:'Outfit',sans-serif;transition:color 0.3s ease;}
+  .mob-acc-trigger.open{color:#007f82;}
+  .mob-acc-trigger.open .mob-ci{transform:rotate(45deg);}
+  img.mob-ci{flex-shrink:0;width:18px;height:18px;max-width:18px !important;max-height:18px !important;transition:transform 0.3s ease;}
+  .mob-acc-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease;}
+  .mob-acc-body.open{max-height:600px;}
+  .mob-acc-body ul{list-style:none;padding:2px 0 12px 8px;}
+  .mob-acc-body ul li{padding:5px 0;font-family:'Outfit',sans-serif;list-style:none;}
+  .mob-acc-body ul li a{font-size:15px;color:#007f82;text-decoration:none;transition:color 0.3s ease;}
+  .mob-direct-link{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0px;font-size:18px;color:#1a1a1a;text-decoration:none;border-top:0.5px solid rgba(0,0,0,0.12) !important;font-weight:400;font-family:'Outfit',sans-serif;transition:color 0.3s ease;}
+  .mob-direct-link:first-child{border-top:none;}
+  .mob-direct-link-arrow{flex-shrink:0;width:16px;height:16px;}
+  .mob-direct-links-wrap{padding:4px 16px 12px;}
+  .mob-all-link{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;font-size:18px;color:#1a1a1a;text-decoration:none; font-family:'Outfit',sans-serif;transition:color 0.3s ease;}
+  .mob-all-link:hover{color:#007f82;}
+  .mob-all-link-arrow{flex-shrink:0;width:16px;height:16px;}
+  .mob-cat-label-link{color:inherit;text-decoration:none;}
+  .mob-cat-label-link:hover{color:#007f82;}
+  .mob-acc-title-link{color:inherit;text-decoration:none;transition:color 0.3s ease;}
+  .mob-acc-title-link:hover{color:#007f82;}
+  
+  img.mob-all-link-arrow, img.mob-direct-link-arrow {
+    width: 18px !important;
+    height: 18px !important;
+    }
+}
+@media(min-width:768px){
+  .mobile-nav{display:none;}
+}
+</style>
+
+<div class="page" id="desktopPage">
+  <div class="hover-group" id="hoverGroup" onmouseleave="hoverRevert()">
+    <div class="sidebar">
+      <button class="sb-item" onclick="sel(this,0)" onmouseenter="hoverSel(0)">Storage Solutions</button>
+      <button class="sb-item" onclick="sel(this,1)" onmouseenter="hoverSel(1)">Racking Inspections</button>
+      <button class="sb-item" onclick="sel(this,2)" onmouseenter="hoverSel(2)">Interior Fit-Out</button>
+      <button class="sb-item" onclick="sel(this,3)" onmouseenter="hoverSel(3)">Mechanical &amp; Electrical</button>
+    </div>
+    <div class="acc-col" id="acc"></div>
+  </div>
+  <div class="img-col">
+    <div class="img-frame" id="imgf">
+      <img id="imgpic" alt="">
+      <i class="ti ti-building-warehouse" id="imgico" aria-hidden="true"></i>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-nav" id="mobileNav"></div>
+
+
+<script>
+const data=[
+  {label:"Storage Solutions",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/",icon:"ti-building-warehouse",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/CEF-Complete-28-of-53-1920x1080-1.jpg",type:"acc",sections:[
+    {title:"Pallet Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/pallet-racking/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/CEF-Complete-28-of-53-1920x1080-1.jpg",items:[
+      {label:"Wide Aisle Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/pallet-racking/wide-aisle-racking/"},
+      {label:"Narrow Aisle Racking (VNA)",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/pallet-racking/narrow-aisle-racking-vna/"},
+      {label:"Double Deep Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/pallet-racking/double-deep-racking/"},
+      {label:"Drive-in Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/pallet-racking/drive-in-racking/"},
+      {label:"Push Back Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/pallet-racking/push-back-racking/"},
+      {label:"Pallet Live Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/pallet-racking/pallet-live-racking/"},
+      {label:"Cantilever Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/pallet-racking/cantilever-racking/"},
+      {label:"Shuttle Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/pallet-racking/shuttle-racking/"},
+      {label:"Mobile Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/pallet-racking/mobile-racking/"},
+      {label:"Carpet Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/pallet-racking/carpet-racking/"},
+      {label:"Coil Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/storage-solutions/pallet-racking/coil-racking/"}
+    ]},
+    {title:"Shelving Systems",url:"https://sde-group-co-uk.stylistichosting.co.uk/shelving-systems/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/05/Ishida-Complete-36-of-57.jpg",items:[
+      {label:"Short Span Shelving",url:"https://sde-group-co-uk.stylistichosting.co.uk/shelving-systems/short-span-shelving/"},
+      {label:"Long Span Shelving",url:"https://sde-group-co-uk.stylistichosting.co.uk/shelving-systems/long-span-shelving/"},
+      {label:"Mobile Shelving",url:"https://sde-group-co-uk.stylistichosting.co.uk/shelving-systems/mobile-shelving/"},
+      {label:"Multi-tier Shelving",url:"https://sde-group-co-uk.stylistichosting.co.uk/shelving-systems/multi-tier-shelving/"}
+    ]},
+    {title:"Automotive Parts Shelving",url:"https://sde-group-co-uk.stylistichosting.co.uk/automotive-parts-shelving/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/05/Ishida-Complete-55-of-57.jpg",items:[
+      {label:"Tyre Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/automotive-parts-shelving/tyre-racking/"},
+      {label:"Exhaust Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/automotive-parts-shelving/exhaust-racking/"},
+      {label:"Body Panels, Windscreens and Bumper Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/automotive-parts-shelving/body-panels-windscreens-and-bumper-racking/"},
+      {label:"Small, Medium & Large Parts Racking",url:"https://sde-group-co-uk.stylistichosting.co.uk/automotive-parts-shelving/small-medium-large-parts-racking/"}
+    ]},
+    {title:"Mezzanine Floors",url:"https://sde-group-co-uk.stylistichosting.co.uk/mezzanine-floors/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/CEF-Chesham-Edit-Photos-02443-1920x1080-1.webp",items:[
+      {label:"Warehouse Mezzanine Floors",url:"https://sde-group-co-uk.stylistichosting.co.uk/mezzanine-floors/warehouse-mezzanine-floors/"},
+      {label:"Office Mezzanine Floors",url:"https://sde-group-co-uk.stylistichosting.co.uk/mezzanine-floors/office-mezzanine-floors/"},
+      {label:"Multi Tier Mezzanines",url:"https://sde-group-co-uk.stylistichosting.co.uk/mezzanine-floors/multi-tier-mezzanines/"},
+      {label:"Fire Protection",url:"https://sde-group-co-uk.stylistichosting.co.uk/mezzanine-floors/fire-protection/"},
+      {label:"Mezzanine Accessories",url:"https://sde-group-co-uk.stylistichosting.co.uk/mezzanine-floors/mezzanine-accessories/"}
+    ]},
+    {title:"Steel Partitioning",url:"https://sde-group-co-uk.stylistichosting.co.uk/steel-partitioning/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/SDE-Lincoln-5-1920x1280-1.jpg",items:[
+      {label:"Single Skin Steel Partitions",url:"https://sde-group-co-uk.stylistichosting.co.uk/steel-partitioning/single-skin-steel-partitions/"},
+      {label:"Double Skin Steel Partitions",url:"https://sde-group-co-uk.stylistichosting.co.uk/steel-partitioning/double-skin-steel-partitions/"},
+      {label:"Mesh Partitions",url:"https://sde-group-co-uk.stylistichosting.co.uk/steel-partitioning/mesh-partitions/"}
+    ]},
+    {title:"Workplace Equipment",url:"https://sde-group-co-uk.stylistichosting.co.uk/workplace-equipment/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/05/KIA-Brentwood-62-1920x1080-1.jpg",items:[
+      {label:"Barriers & Guards",url:"https://sde-group-co-uk.stylistichosting.co.uk/workplace-equipment/barriers-guards/"},
+      {label:"Lockers",url:"https://sde-group-co-uk.stylistichosting.co.uk/workplace-equipment/lockers/"},
+      {label:"Workbenches",url:"https://sde-group-co-uk.stylistichosting.co.uk/workplace-equipment/workbenches/"},
+      {label:"Line Marking",url:"https://sde-group-co-uk.stylistichosting.co.uk/workplace-equipment/line-marking/"}
+    ]}
+  ]},
+  {label:"Racking Inspections",url:"https://sde-group-co-uk.stylistichosting.co.uk/racking-inspections/",icon:"ti-clipboard-check",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/Screenshot-2026-04-21-at-12.36.09.png",type:"direct",links:[
+    {label:"SEMA Approved Rack Inspectors",url:"https://sde-group-co-uk.stylistichosting.co.uk/racking-inspections/sema-approved-rack-inspectors/"},
+    {label:"Rack Awareness Training",url:"https://sde-group-co-uk.stylistichosting.co.uk/racking-inspections/rack-awareness-training/"}
+  ]},
+  {label:"Interior Fit-Out",url:"https://sde-group-co-uk.stylistichosting.co.uk/interior-fit-out/",icon:"ti-layout-2",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/CEF-Chesham-Edit-Photos-02205-1920x1080-1.webp",type:"acc",sections:[
+    {title:"Partitioning",url:"https://sde-group-co-uk.stylistichosting.co.uk/partitioning/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/05/SDE-Stoke-Parts-Plus-30-1920x1280-1.jpg",items:[
+      {label:"Office Partitions",url:"https://sde-group-co-uk.stylistichosting.co.uk/partitioning/office-partitions/"},
+      {label:"Glazed Partitions",url:"https://sde-group-co-uk.stylistichosting.co.uk/partitioning/glazed-partitions/"},
+      {label:"Jumbo Stud Partitions",url:"https://sde-group-co-uk.stylistichosting.co.uk/partitioning/jumbo-stud-partitions/"},
+      {label:"Movable Partitions",url:"https://sde-group-co-uk.stylistichosting.co.uk/partitioning/movable-partitions/"}
+    ]},
+    {title:"Doors & Joinery Services",url:"https://sde-group-co-uk.stylistichosting.co.uk/doors-joinery-services/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/SDE-Office-scaled.jpg",items:[
+      {label:"Solid or Laminate Doors",url:"https://sde-group-co-uk.stylistichosting.co.uk/doors-joinery-services/solid-or-laminate-doors/"},
+      {label:"Glazed Doors",url:"https://sde-group-co-uk.stylistichosting.co.uk/doors-joinery-services/glazed-doors/"},
+      {label:"Standard or Bespoke Fire Doors",url:"https://sde-group-co-uk.stylistichosting.co.uk/doors-joinery-services/standard-or-bespoke-fire-doors/"},
+      {label:"Steel Fire Exit Doors",url:"https://sde-group-co-uk.stylistichosting.co.uk/doors-joinery-services/steel-fire-exit-doors/"},
+      {label:"Skirtings & Architraves",url:"https://sde-group-co-uk.stylistichosting.co.uk/doors-joinery-services/skirtings-architraves/"},
+      {label:"Trade Counters",url:"https://sde-group-co-uk.stylistichosting.co.uk/doors-joinery-services/trade-counters/"},
+      {label:"Workstations",url:"https://sde-group-co-uk.stylistichosting.co.uk/doors-joinery-services/workstations/"},
+      {label:"Windows",url:"https://sde-group-co-uk.stylistichosting.co.uk/doors-joinery-services/windows/"},
+      {label:"Bespoke Joinery",url:"https://sde-group-co-uk.stylistichosting.co.uk/doors-joinery-services/bespoke-joinery/"}
+    ]},
+    {title:"Ceilings",url:"https://sde-group-co-uk.stylistichosting.co.uk/ceilings/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/05/KIA-Brentwood-30-1920x1080-1.jpg",items:[
+      {label:"Metal Grid Ceilings",url:"https://sde-group-co-uk.stylistichosting.co.uk/ceilings/metal-grid-ceilings/"},
+      {label:"MF Ceilings",url:"https://sde-group-co-uk.stylistichosting.co.uk/ceilings/mf-ceilings/"},
+      {label:"Bulkheads & Fascias",url:"https://sde-group-co-uk.stylistichosting.co.uk/ceilings/bulkheads-fascias/"},
+      {label:"Fire Barriers",url:"https://sde-group-co-uk.stylistichosting.co.uk/ceilings/fire-barriers/"}
+    ]},
+    {title:"Commercial Flooring",url:"https://sde-group-co-uk.stylistichosting.co.uk/commercial-flooring/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/05/KIA-Brentwood-17-1920x1080-1.jpg",items:[
+      {label:"Carpet Tiling",url:"https://sde-group-co-uk.stylistichosting.co.uk/commercial-flooring/carpet-tilling/"},
+      {label:"LVT / Vinyl Flooring",url:"https://sde-group-co-uk.stylistichosting.co.uk/commercial-flooring/lvt-vinyl-flooring/"},
+      {label:"Resin Flooring",url:"https://sde-group-co-uk.stylistichosting.co.uk/commercial-flooring/resin-flooring/"},
+      {label:"Ceramic Tiling",url:"https://sde-group-co-uk.stylistichosting.co.uk/commercial-flooring/ceramic-tilling/"}
+    ]},
+    {title:"Welfare Area",url:"https://sde-group-co-uk.stylistichosting.co.uk/welfare-area/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/Breakout-area-950x534-1.png",items:[
+      {label:"Washrooms",url:"https://sde-group-co-uk.stylistichosting.co.uk/welfare-area/washrooms/"},
+      {label:"WC's",url:"https://sde-group-co-uk.stylistichosting.co.uk/welfare-area/wcs/"},
+      {label:"Kitchens",url:"https://sde-group-co-uk.stylistichosting.co.uk/welfare-area/kitchens/"},
+      {label:"Breakout Areas",url:"https://sde-group-co-uk.stylistichosting.co.uk/welfare-area/breakout-areas/"}
+    ]},
+    {title:"Decorating",url:"https://sde-group-co-uk.stylistichosting.co.uk/decorating/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/05/IMG-20240112-WA0032.png",items:[
+      {label:"Painting",url:"https://sde-group-co-uk.stylistichosting.co.uk/decorating/painting/"},
+      {label:"Tape & Fill",url:"https://sde-group-co-uk.stylistichosting.co.uk/decorating/tape-fill/"},
+      {label:"Spraying",url:"https://sde-group-co-uk.stylistichosting.co.uk/decorating/spraying/"}
+    ]},
+    {title:"Dilapidation",url:"https://sde-group-co-uk.stylistichosting.co.uk/dilapadation/",items:[
+      {label:"Demolition & Strip Out",url:"https://sde-group-co-uk.stylistichosting.co.uk/dilapadation/demolition-strip-out/"},
+      {label:"EPC Improvements",url:"https://sde-group-co-uk.stylistichosting.co.uk/dilapadation/epc-improvements/"}
+    ]}
+  ]},
+  {label:"Mechanical & Electrical",url:"https://sde-group-co-uk.stylistichosting.co.uk/mechanical-electrical/",icon:"ti-bolt",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/Edited-Medway-19-1920x1080-1.jpg",type:"acc",sections:[
+    {title:"Mechanical",url:"https://sde-group-co-uk.stylistichosting.co.uk/mechanical/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/05/Visit-4-Images-Edited-20-1-1920x1080-1.jpg",items:[
+      {label:"Air Conditioning",url:"https://sde-group-co-uk.stylistichosting.co.uk/mechanical/air-conditioning/"},
+      {label:"Ventilation",url:"https://sde-group-co-uk.stylistichosting.co.uk/mechanical/ventilation/"},
+      {label:"Plumbing & Drainage",url:"https://sde-group-co-uk.stylistichosting.co.uk/mechanical/plumbing-drainage/"},
+      {label:"BMS & Air Handling Units",url:"https://sde-group-co-uk.stylistichosting.co.uk/mechanical/bms-air-handling-units/"}
+    ]},
+    {title:"Electrical Services",url:"https://sde-group-co-uk.stylistichosting.co.uk/electrical-services/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/05/Gridserve-Lincoln-Edited-1-1920x1080-1.jpg",items:[
+      {label:"Electrical Design & Consultation",url:"https://sde-group-co-uk.stylistichosting.co.uk/electrical-services/electrical-design-consultation/"},
+      {label:"Commercial & Industrial Installations",url:"https://sde-group-co-uk.stylistichosting.co.uk/electrical-services/commercial-industrial-installations/"},
+      {label:"Service & Maintenance",url:"https://sde-group-co-uk.stylistichosting.co.uk/electrical-services/service-maintenance/"},
+      {label:"EV Charging Station Installation",url:"https://sde-group-co-uk.stylistichosting.co.uk/electrical-services/ev-charging-station-installation/"},
+      {label:"Fire Alarm Installations",url:"https://sde-group-co-uk.stylistichosting.co.uk/electrical-services/fire-alarm-installations/"},
+      {label:"Data & Security",url:"https://sde-group-co-uk.stylistichosting.co.uk/electrical-services/data-security/"},
+      {label:"Testing & Inspections",url:"https://sde-group-co-uk.stylistichosting.co.uk/electrical-services/testing-inspections/"},
+      {label:"High Voltage Installations",url:"https://sde-group-co-uk.stylistichosting.co.uk/electrical-services/high-voltage-installations/"}
+    ]},
+    {title:"Energy Solutions",url:"https://sde-group-co-uk.stylistichosting.co.uk/energy-solutions/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/rooftop-solar-system-installation-2023-11-27-05-24-12-utc-scaled-1-950x633-1.jpeg",items:[
+      {label:"Commercial Solar PV",url:"https://sde-group-co-uk.stylistichosting.co.uk/energy-solutions/commercial-solar-pv/"},
+      {label:"New Builds Solar PV",url:"https://sde-group-co-uk.stylistichosting.co.uk/energy-solutions/new-builds-solar-pv/"},
+      {label:"Battery Storage and BESS",url:"https://sde-group-co-uk.stylistichosting.co.uk/energy-solutions/battery-storage-and-bess/"},
+      {label:"Commercial EV Charging",url:"https://sde-group-co-uk.stylistichosting.co.uk/energy-solutions/commercial-ev-charging/"}
+    ]},
+    {title:"Design Services",url:"https://sde-group-co-uk.stylistichosting.co.uk/design-services/",img:"https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/05/Heisis.liv-13-1920x1080-1.jpg",items:[
+      {label:"Project Management & Consultancy",url:"https://sde-group-co-uk.stylistichosting.co.uk/design-services/project-management-consultancy/"},
+      {label:"Power & Distribution Systems",url:"https://sde-group-co-uk.stylistichosting.co.uk/design-services/power-distribution-systems/"},
+      {label:"Fire, Security & Safety Systems",url:"https://sde-group-co-uk.stylistichosting.co.uk/design-services/fire-security-safety-systems/"},
+      {label:"Mechanical Design & Coordination Services",url:"https://sde-group-co-uk.stylistichosting.co.uk/design-services/mechanical-design-coordination-services/"},
+      {label:"Data, IT & Communication Services",url:"https://sde-group-co-uk.stylistichosting.co.uk/design-services/data-it-communication-services/"},
+      {label:"Energy & Sustainability",url:"https://sde-group-co-uk.stylistichosting.co.uk/design-services/energy-sustainability/"}
+    ]}
+  ]}
+];
+
+let openIdx=-1,activeCat=0,activeOpenIdx=-1;
+const arrowUrl="https://sde-group-co-uk.stylistichosting.co.uk/wp-content/uploads/2026/04/dotted-arrow-dark.svg";
+
+const ciIconUrl=URL.createObjectURL(new Blob([`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.17 20.17"><style>.st0{fill:#081F2D;}</style><circle class="st0" cx="1.47" cy="10.12" r="1.47"/><circle class="st0" cx="5.78" cy="10.1" r="1.47"/><circle class="st0" cx="10.08" cy="10.08" r="1.47"/><circle class="st0" cx="14.39" cy="10.07" r="1.47"/><circle class="st0" cx="18.7" cy="10.05" r="1.47"/><circle class="st0" cx="10.12" cy="18.7" r="1.47"/><circle class="st0" cx="10.1" cy="14.39" r="1.47"/><circle class="st0" cx="10.07" cy="5.78" r="1.47"/><circle class="st0" cx="10.05" cy="1.47" r="1.47"/></svg>`],{type:'image/svg+xml'}));
+
+function updateImg(icon,imgUrl){
+  const pic=document.getElementById('imgpic');
+  const ico=document.getElementById('imgico');
+  if(imgUrl){pic.style.opacity='0';ico.style.opacity='0';setTimeout(()=>{pic.src=imgUrl;pic.style.opacity='1';},200);}
+  else{pic.style.opacity='0';ico.className='ti '+icon;ico.style.opacity='1';}
+}
+function revertImg(){updateImg(data[activeCat].icon,data[activeCat].img||null);}
+function hoverSel(idx){openIdx=-1;build(idx);updateImg(data[idx].icon,data[idx].img||null);}
+function hoverRevert(){openIdx=activeOpenIdx;build(activeCat);revertImg();}
+
+function build(idx){
+  const col=document.getElementById('acc');
+  col.innerHTML='';
+  const cat=data[idx];
+  const allA=document.createElement('a');
+  allA.className='all-link';
+  allA.href=cat.url;
+  allA.innerHTML=`<span>All ${cat.label}</span><img class="all-link-arrow" src="${arrowUrl}" alt="">`;
+  col.appendChild(allA);
+  if(cat.type==='direct'){
+    cat.links.forEach((lnk,i)=>{
+      const a=document.createElement('a');const isObj=typeof lnk==='object';a.href=isObj&&lnk.url?lnk.url:'#';a.className='direct-link';
+      a.innerHTML=`<span>${isObj?lnk.label:lnk}</span><img class="direct-link-arrow" src="${arrowUrl}" alt="">`;
+      col.appendChild(a);
+    });return;
+  }
+  cat.sections.forEach((sec,i)=>{
+    const wrap=document.createElement('div');wrap.className='acc-wrap';
+    wrap.onmouseenter=()=>updateImg(data[idx].icon,sec.img||null);
+    wrap.onmouseleave=revertImg;
+    const btn=document.createElement('button');btn.className='acc-trigger'+(i===openIdx?' open':'');
+    btn.innerHTML=`<span>${sec.title}</span><img class="ci" src="${ciIconUrl}" aria-hidden="true">`;
+    btn.onclick=()=>tog(i);
+    const body=document.createElement('div');body.className='acc-body'+(i===openIdx?' open':'');
+    const ul=document.createElement('ul');
+    if(sec.url){
+      const allLi=document.createElement('li');
+      const allA=document.createElement('a');allA.href=sec.url;allA.className='acc-all-item';allA.textContent=`All ${sec.title}`;
+      allLi.appendChild(allA);ul.appendChild(allLi);
+    }
+    sec.items.forEach(it=>{const li=document.createElement('li');const a=document.createElement('a');const isObj=typeof it==='object';a.href=isObj&&it.url?it.url:'#';a.textContent=isObj?it.label:it;li.appendChild(a);ul.appendChild(li);});
+    body.appendChild(ul);wrap.appendChild(btn);wrap.appendChild(body);col.appendChild(wrap);
+  });
+}
+
+function tog(i){
+  openIdx=openIdx===i?-1:i;activeOpenIdx=openIdx;
+  document.querySelectorAll('.acc-trigger').forEach((b,j)=>b.classList.toggle('open',j===openIdx));
+  document.querySelectorAll('.acc-body').forEach((b,j)=>b.classList.toggle('open',j===openIdx));
+}
+
+function sel(btn,idx){
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');activeCat=idx;openIdx=-1;activeOpenIdx=-1;
+  build(idx);
+  const f=document.getElementById('imgf');f.classList.remove('fade');void f.offsetWidth;f.classList.add('fade');
+  updateImg(data[idx].icon,data[idx].img||null);
+}
+
+build(0);updateImg(data[0].icon,data[0].img||null);
+
+/* ---- Mobile nav ---- */
+const mobNav=document.getElementById('mobileNav');
+const mobOpenState={cat:-1,sub:-1};
+
+function buildMobile(){
+  mobNav.innerHTML='';
+  data.forEach((cat,ci)=>{
+    const wrap=document.createElement('div');wrap.className='mob-cat';
+    const btn=document.createElement('button');btn.className='mob-cat-btn'+(mobOpenState.cat===ci?' open':'');
+    const label=document.createElement('span');
+    label.textContent=cat.label;
+    const icon=document.createElement('img');
+    icon.className='mob-cat-icon';
+    icon.src=ciIconUrl;
+    icon.setAttribute('aria-hidden','true');
+    btn.appendChild(label);
+    btn.appendChild(icon);
+    btn.onclick=()=>mobTogCat(ci);
+    const body=document.createElement('div');body.className='mob-cat-body'+(mobOpenState.cat===ci?' open':'');
+    const mobAllA=document.createElement('a');
+    mobAllA.className='mob-all-link';
+    mobAllA.href=cat.url;
+    mobAllA.innerHTML=`<span>All ${cat.label}</span><img class="mob-all-link-arrow" src="${arrowUrl}" alt="">`;
+    body.appendChild(mobAllA);
+    if(cat.type==='direct'){
+      const linksWrap=document.createElement('div');linksWrap.className='mob-direct-links-wrap';
+      cat.links.forEach(lnk=>{const a=document.createElement('a');const isObj=typeof lnk==='object';a.href=isObj&&lnk.url?lnk.url:'#';a.className='mob-direct-link';a.innerHTML=`<span>${isObj?lnk.label:lnk}</span><img class="mob-direct-link-arrow" src="${arrowUrl}" alt="">`;linksWrap.appendChild(a);});
+      body.appendChild(linksWrap);
+    } else {
+      cat.sections.forEach((sec,si)=>{
+        const sw=document.createElement('div');sw.className='mob-acc-wrap';
+        const sb=document.createElement('button');sb.className='mob-acc-trigger'+(mobOpenState.cat===ci&&mobOpenState.sub===si?' open':'');
+        sb.innerHTML=`<span>${sec.title}</span><img class="mob-ci" src="${ciIconUrl}" aria-hidden="true">`;
+        sb.onclick=()=>mobTogSub(ci,si);
+        const sbody=document.createElement('div');sbody.className='mob-acc-body'+(mobOpenState.cat===ci&&mobOpenState.sub===si?' open':'');
+        const ul=document.createElement('ul');
+        if(sec.url){
+          const allLi=document.createElement('li');
+          const allA=document.createElement('a');allA.href=sec.url;allA.className='mob-acc-all-item';allA.textContent=`All ${sec.title}`;
+          allLi.appendChild(allA);ul.appendChild(allLi);
+        }
+        sec.items.forEach(it=>{const li=document.createElement('li');const a=document.createElement('a');const isObj=typeof it==='object';a.href=isObj&&it.url?it.url:'#';a.textContent=isObj?it.label:it;li.appendChild(a);ul.appendChild(li);});
+        sbody.appendChild(ul);sw.appendChild(sb);sw.appendChild(sbody);body.appendChild(sw);
+      });
+    }
+    wrap.appendChild(btn);wrap.appendChild(body);mobNav.appendChild(wrap);
+  });
+}
+
+function mobTogCat(ci){
+  mobOpenState.cat=mobOpenState.cat===ci?-1:ci;
+  mobOpenState.sub=-1;
+  buildMobile();
+}
+function mobTogSub(ci,si){
+  if(mobOpenState.cat===ci&&mobOpenState.sub===si){mobOpenState.sub=-1;}
+  else{mobOpenState.cat=ci;mobOpenState.sub=si;}
+  buildMobile();
+}
+
+buildMobile();
+</script>
